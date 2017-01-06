@@ -21,8 +21,6 @@ public class CircleProgressBar extends View {
     private int progress = 0;
     private Context context;
     private Paint mPaint;// 画笔
-    private int hight;
-    private int width;
 
     public CircleProgressBar(Context context) {
         super(context);
@@ -69,11 +67,19 @@ public class CircleProgressBar extends View {
     }
     @Override
     protected void onDraw(Canvas canvas) {
+        final int paddingLeft =getPaddingLeft();
+        final int paddingRight =getPaddingRight();
+        final int paddingBottom =getPaddingBottom();
+        final int paddingTop =getPaddingTop();
+        int width =getWidth()-paddingLeft-paddingRight;
+        int height =getHeight()-paddingBottom-paddingTop;
+        
         super.onDraw(canvas);
         mPaint.setStrokeWidth(3);
         mPaint.setAntiAlias(true); // 消除锯齿
         mPaint.setStyle(Paint.Style.FILL);
 
+        
         for (int i = 0; i < 100; i++) {
             if (i >= progress) {
                 //进行
@@ -82,29 +88,30 @@ public class CircleProgressBar extends View {
                 mPaint.setColor(Color.parseColor("#2ecc71"));//
             }
             canvas.save();//保存当前画布状态
-            Log.d(getWidth() / 2 + "", getHeight() / 2 + "");
-            canvas.translate(getWidth() / 2, getHeight() / 2); //将坐标中心平移到要围绕的坐标点x,y
+            Log.d(width / 2 + "", height / 2 + "");
+            canvas.translate(width / 2, height / 2); //将坐标中心平移到要围绕的坐标点x,y
             canvas.rotate(45 + i * 3.6f);//旋转角度，这里比如90度
-            canvas.drawLine(getWidth() / 4, getHeight() / 4, getWidth() / 4 - 10, getHeight() / 4 - 10, mPaint);
+            canvas.drawLine(width / 4, height / 4, width / 4 - 10, height / 4 - 10, mPaint);
             canvas.restore();//恢复画图状态到保存前
         }
         mPaint.setColor(Color.parseColor("#5990c9"));//
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 4, mPaint);
+        canvas.drawCircle(width / 2, height / 2, width / 4, mPaint);
         mPaint.setColor(Color.parseColor("#f4f4f4"));//
-        mPaint.setTextSize(30 * getWidth() / 216);
+        mPaint.setTextSize(30 * width / 216);
         if (progress < 10) {
-            canvas.drawText(progress + "%", getWidth() / 2 - TextUtil.getWidthSize(30), getHeight() / 2+TextUtil.getHightSize(30), mPaint);
+            canvas.drawText(progress + "%", width / 2 - TextUtil.getWidthSize(30), height / 2+TextUtil.getHightSize(30), mPaint);
         } else if (progress < 100) {
-            canvas.drawText(progress + "%", getWidth() / 2 - TextUtil.getWidthSize(60), getHeight() / 2+TextUtil.getHightSize(30), mPaint);
+            canvas.drawText(progress + "%", width / 2 - TextUtil.getWidthSize(60), height / 2+TextUtil.getHightSize(30), mPaint);
         } else {
-            canvas.drawText(progress + "%", getWidth() / 2 - TextUtil.getWidthSize(90), getHeight() / 2 +TextUtil.getHightSize(30), mPaint);
+            canvas.drawText(progress + "%", width / 2 - TextUtil.getWidthSize(90), height / 2 +TextUtil.getHightSize(30), mPaint);
         }
-        mPaint.setTextSize(20 * getWidth() / 216);
+        mPaint.setTextSize(20 * width / 216);
 
     }
 
     public void setProgress(int progress) {
         this.progress = progress;
+        //todo 没做Progress差很多时候的ui
         postInvalidate();
     }
 }
